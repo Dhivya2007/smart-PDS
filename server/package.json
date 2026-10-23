@@ -1,0 +1,32 @@
+{
+  "name": "smart-pds-server",
+  "version": "1.0.0",
+  "description": "Smart Public Distribution System (PDS) Queue Management Backend",
+  "main": "src/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "seed": "node src/utils/seed.js",
+    "test": "node --test tests/*.test.js"
+  },
+  "keywords": ["pds", "ration-shop", "queue-management", "express", "mongodb"],
+  "author": "Antigravity Senior Full-Stack Engineer",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.9.5",
+    "nodemailer": "^6.10.0",
+    "qrcode": "^1.5.4",
+    "uuid": "^11.0.5"
+  },
+  "devDependencies": {
+    "supertest": "^7.0.0"
+  }
+}
