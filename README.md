@@ -1,73 +1,105 @@
 # Smart Public Distribution System (Smart PDS)
+
 ### Full-Stack Queue Management, QR Token & Ration Allocation Platform
 
-A modern, production-grade web application engineered to eliminate physical queues, prevent black marketing, guarantee fair allocation, and digitize food grain distribution across Fair Price Shops (FPS).
+Smart PDS is a full-stack web application designed to digitize the Public Distribution System (PDS). It helps beneficiaries book ration collection slots, reduces physical queues, supports QR-based token verification, and enables Fair Price Shop (FPS) owners to manage stock and distribution records.
 
----
+The platform also provides administrative analytics and bilingual access in English and Tamil.
 
-## 1. System Overview & Technology Stack
+## 1. Project Objectives
 
-- **Frontend**: React 18, Vite, Tailwind CSS, Recharts (Visual Analytics), Lucide Icons, HTML5-QRCode (Webcam QR Scanner), Bilingual Localization Engine (English & Tamil).
-- **Backend**: Node.js, Express.js (REST APIs, Modular Architecture), Helmet, Express Rate Limit, Nodemailer.
-- **Database**: MongoDB with Mongoose (Compound unique indexes, atomic updates, schema validations).
-- **Authentication & Security**: JWT with Bcrypt password hashing (10 salt rounds), HMAC-SHA256 tamper-proof QR signatures, Role-Based Access Control (RBAC).
-- **Payment Abstraction**: Pluggable Payment Service with Development Mock Gateway (testing Success, Card Decline, and Network Glitches) + Cash at Counter reconciliation.
-- **Agile Engineering**: Complete Scrum documentation package in `docs/` with 4 Sprint plans, product backlog, user stories, and test plans.
+- Reduce waiting time at Fair Price Shops through scheduled collection slots.
+- Improve transparency in ration allocation and distribution.
+- Prevent duplicate monthly collections through application-level and database validation.
+- Support secure QR-based queue token verification.
+- Maintain inventory and distribution records.
+- Provide role-based access for beneficiaries, shop owners, and administrators.
+- Make the citizen interface accessible in English and Tamil.
 
----
+## 2. Technology Stack
 
-## 2. User Roles & Pre-Seeded Test Credentials
+| Component | Technologies |
+|---|---|
+| Frontend | React 18, Vite, Tailwind CSS |
+| Charts and icons | Recharts, Lucide Icons |
+| QR scanning | HTML5-QRCode |
+| Backend | Node.js, Express.js |
+| Database | MongoDB, Mongoose |
+| Authentication | JWT, bcrypt |
+| Security | Helmet, Express Rate Limit, role-based access control |
+| Notifications | Nodemailer |
+| Payment simulation | Mock Payment Gateway, Cash at Counter |
+| Project management | Agile Scrum, Sprint Planning, Product Backlog, User Stories |
+| Testing | Node.js Native Test Runner |
 
-The database comes pre-seeded with realistic Indian PDS households, fair price shops, commodities stock, and users.
+## 3. User Roles
 
-| Role | Name | Email | Password | Linked Entity / Details |
-| :--- | :--- | :--- | :--- | :--- |
-| **Administrator** | Dr. R. Balaji IAS | `admin@smartpds.gov.in` | `Admin@123` | Statewide Governance & Analytics |
-| **Shop Owner 1** | P. Arumugam | `owner.anna@smartpds.gov.in` | `Shop@123` | Anna Nagar FPS (`FPS-TN-04-001`) |
-| **Shop Owner 2** | V. Senthil Nathan | `owner.tmgmt@smartpds.gov.in` | `Shop@123` | T. Nagar Co-op FPS (`FPS-TN-04-002`) |
-| **Beneficiary 1 (PHH)** | Karthik Ramachandran | `karthik.pds@gmail.com` | `Citizen@123` | Card `330410293847` (Active Token ready) |
-| **Beneficiary 2 (AAY)** | Meenakshi Murugan | `meena.pds@gmail.com` | `Citizen@123` | Card `330420384719` (35kg Rice Entitlement) |
-| **Beneficiary 3 (NPHH)** | Anand Natarajan | `anand.pds@gmail.com` | `Citizen@123` | Card `330430472819` (Has past receipt) |
+### Beneficiary
+- Access a ration card dashboard.
+- View ration entitlements and collection information.
+- Book available ration collection slots.
+- View queue tokens and QR codes.
+- View bookings, payment information, and receipts.
 
-> **Unlinked 12-Digit Test Card for Fresh Registration**:
-> - Card Number: `330499887766`
-> - Head of Family: Suresh Kumar
-> - Head Aadhaar Last 4: `1234`
+### Fair Price Shop Owner
+- Verify beneficiary details and queue tokens.
+- Scan QR codes or enter tokens manually.
+- Confirm ration distribution.
+- Manage commodity inventory and stock replenishment.
+- View distribution records and receipts.
 
----
+### Administrator
+- Monitor distribution statistics and analytics.
+- Manage users and Fair Price Shops.
+- Configure shop and slot-related settings.
+- View reports and export supported data.
 
-## 3. Directory Structure
+## 4. Key Features
 
-```
+- **Slot booking:** 15-minute collection intervals with capacity validation.
+- **Monthly collection validation:** Prevents duplicate successful collections within a monthly cycle.
+- **QR token verification:** Uses HMAC-SHA256 signatures to help detect token tampering.
+- **Inventory management:** Tracks commodity stock and distribution updates.
+- **Payment simulation:** Supports mock payment outcomes and cash-at-counter workflows.
+- **Bilingual interface:** English and Tamil localization.
+- **Role-based authorization:** Restricts operations according to user roles.
+- **Analytics dashboard:** Displays distribution trends and commodity statistics.
+- **Agile documentation:** Includes product vision, backlogs, user stories, sprint plans, and testing documentation.
+
+## 5. System Architecture
+
+The application follows a client-server architecture.
+
+1. **Frontend:** React provides the user interface and communicates with the backend through REST APIs.
+2. **Backend:** Express.js processes requests, authenticates users, validates business rules, and manages application workflows.
+3. **Database:** MongoDB stores users, ration cards, shops, bookings, tokens, payments, stock, and distribution records.
+4. **Security layer:** JWT authentication, role-based authorization, password hashing, request rate limiting, and signed QR tokens protect application operations.
+
+## 6. Project Structure
+
+```text
 smart-pds/
-├── client/                      # React 18 + Vite + Tailwind CSS Frontend
+├── client/
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── common/          # Navbar, Footer, ProtectedRoute, StatusBadge
-│   │   │   ├── beneficiary/     # RationCardCard, SlotPicker, QueueTokenCard, PaymentModal, ReceiptModal
-│   │   │   ├── shop/            # TokenScanner (Webcam/Manual), DistributionForm, StockUpdateModal
-│   │   │   └── admin/           # StatsCards, AnalyticsCharts
-│   │   ├── context/             # AuthContext, LanguageContext (EN/TA), NotificationContext
+│   │   ├── context/
 │   │   ├── pages/
-│   │   │   ├── LandingPage.jsx  # Citizen portal homepage & instant card lookup
-│   │   │   ├── LoginPage.jsx    # Multi-role login with 1-click quick-fill demo buttons
-│   │   │   ├── RegisterPage.jsx # Registration for Citizens & Shop Owners
-│   │   │   ├── beneficiary/     # Dashboard, BookSlot, MyBookings, PurchaseHistory, VerifyCard
-│   │   │   ├── shop/            # ShopDashboard, VerifyDistribute, StockManagement
-│   │   │   └── admin/           # AdminDashboard, ManageUsers, ManageShops, Reports
-│   │   ├── services/            # Axios API wrappers
-│   │   └── translations/        # English (`en.json`) and Tamil (`ta.json`)
-├── server/                      # Node.js + Express REST API Backend
+│   │   ├── services/
+│   │   └── translations/
+│   ├── package.json
+│   └── vite.config.js
+├── server/
 │   ├── src/
-│   │   ├── config/              # MongoDB connection & JWT config
-│   │   ├── controllers/         # Auth, RationCard, Shop, Booking, Payment, Distribution, Stock, Admin
-│   │   ├── middleware/          # JWT Auth, Role RBAC, Rate Limiter, Error Handler
-│   │   ├── models/              # User, RationCard, Shop, Booking, QueueToken, Payment, Stock, DistributionRecord, Notification
-│   │   ├── routes/              # Express REST routes mounted under `/api/`
-│   │   ├── services/            # Slot Engine, QR Token Generator, Payment Mock Gateway, Notification Service
-│   │   └── utils/               # Database seed script
-│   └── tests/                   # Automated Node.js integration test suite
-├── docs/                        # Complete Agile Engineering Documentation
+│   │   ├── config/
+│   │   ├── controllers/
+│   │   ├── middleware/
+│   │   ├── models/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   └── utils/
+│   ├── tests/
+│   └── package.json
+├── docs/
 │   ├── 01-PRODUCT-VISION.md
 │   ├── 02-PRODUCT-BACKLOG.md
 │   ├── 03-USER-STORIES.md
@@ -76,124 +108,165 @@ smart-pds/
 │   ├── 06-TEST-PLAN-AND-CASES.md
 │   ├── 07-DEFINITION-OF-DONE.md
 │   └── 08-SPRINT-REVIEW-RETROSPECTIVE.md
+├── .gitignore
 └── README.md
 ```
 
----
+## 7. Prerequisites
 
-## 4. Setup & Running Instructions
+Install the following before running the project:
 
-### Prerequisites
-- **Node.js**: v18+ (tested on v22.18.0)
-- **MongoDB**: Local MongoDB instance running on port 27017 or MongoDB Atlas URI
+- Node.js 18 or later.
+- npm.
+- MongoDB local installation or a MongoDB Atlas database.
+- Git.
+- A modern web browser.
 
-### Step 1: Backend Setup & Database Seeding
+## 8. Installation and Setup
+
+### Step 1: Clone the repository
+
 ```bash
-# 1. Navigate to server folder
-cd smart-pds/server
+git clone https://github.com/Dhivya2007/smart-PDS
+cd smart-pds
+```
 
-# 2. Install server dependencies
+Replace the placeholder with the actual repository URL.
+
+### Step 2: Configure the backend
+
+```bash
+cd server
 npm install
-
-# 3. Seed database with realistic PDS shops, cards, stock, and users
-npm run seed
-
-# 4. Start backend server (Runs on http://localhost:5000)
-npm start
-# (or for development auto-restart: npm run dev)
 ```
 
-### Step 2: Running Automated Integration Tests
-```bash
-cd smart-pds/server
-npm test
-```
-*Executes all 18 test scenarios covering authentication, card verification, slot availability, duplicate prevention, payment simulation, QR verification, and stock decrements.*
+Create a `.env` file inside the `server` directory using the environment variables required by your backend.
 
-### Step 3: Frontend Setup & Launch
-```bash
-# In a new terminal window:
-cd smart-pds/client
+Example configuration:
 
-# Install frontend dependencies
-npm install
-
-# Start Vite development server (Runs on http://localhost:5173)
-npm run dev
-```
-
-Open your browser at **`http://localhost:5173`**.
-
----
-
-## 5. Required Environment Variables
-
-### Server (`smart-pds/server/.env`)
 ```env
 PORT=5000
 NODE_ENV=development
 CLIENT_URL=http://localhost:5173
-MONGODB_URI=mongodb://127.0.0.1:27017/smart_pds
-JWT_SECRET=smart_pds_jwt_super_secret_key_change_in_production_2026
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=replace_with_a_secure_random_secret
 JWT_EXPIRES_IN=7d
-QR_SECRET=smart_pds_qr_token_hmac_secret_2026
+QR_SECRET=replace_with_a_separate_secure_secret
 PAYMENT_GATEWAY_MODE=mock
-PAYMENT_MERCHANT_KEY=mock_pds_merchant_key
-PAYMENT_WEBHOOK_SECRET=mock_webhook_secret_key
-EMAIL_FROM=no-reply@smartpds.gov.in
+PAYMENT_MERCHANT_KEY=your_development_placeholder
+PAYMENT_WEBHOOK_SECRET=your_development_placeholder
+EMAIL_FROM=your_configured_sender_address
 ```
 
----
+**Security note:** This is a template only. Use private values in your local `.env` file or deployment environment settings. Never commit actual credentials or secrets to GitHub.
 
-## 6. Key Business Rules & Architectural Guarantees
+### Step 3: Seed the database
 
-1. **Strict 15-Minute Slot Capacity**: Slots are partitioned into 15-minute intervals (e.g. `09:00 - 09:15`, `09:15 - 09:30`). The backend evaluates remaining capacity dynamically, rejecting overbookings.
-2. **Single Monthly Collection Enforcement**: A household ration card is restricted to exactly **one successful collection per monthly cycle**. Both database compound unique indexes and business controllers prevent multiple active bookings or duplicate distributions.
-3. **Tamper-Proof QR Codes**: Tokens are generated with cryptographically signed HMAC payloads (`PDS-TKN-YYYYMM-XXXXXXXX`). The shop owner scanner decodes and verifies the signature, rejecting cross-shop or already-used tokens.
-4. **Atomic Disbursal & Stock Reconciliation**: Disbursal updates the booking to `DISTRIBUTED`, marks the token `USED`, updates the ration card `lastCollectedMonth`, generates a `DistributionRecord`, and decrements commodity inventory atomically.
-5. **Flexible Payment Abstraction**: Supports both Cash at Counter (confirmed by shop owner) and an interactive Mock Payment Gateway (simulating Success, Card Decline, and Network Timeout).
-6. **Bilingual Citizen Access**: Instant English / Tamil (`தமிழ்`) interface switching across navigation, buttons, status indicators, and notification labels.
+If the project includes the configured seed script, run:
 
----
+```bash
+npm run seed
+```
 
-## 7. Automated Test Results
+Use this only with a development database. Check the seed script before running it, because it may create or reset test records.
 
-- **Test Suite**: Node.js Native Test Engine (`node --test tests/*.test.js`)
-- **Total Tests**: 18
-- **Passed**: 18
-- **Failed**: 0
-- **Pass Rate**: 100%
+### Step 4: Start the backend
 
-All critical flows verified:
-- Login and role authorization (Admin, Shop Owner, Beneficiary)
-- Ration card verification and Aadhaar digit validation
-- 15-minute slot generation and capacity bounds
-- Rejection of duplicate monthly bookings
-- Mock payment gateway failure and success simulations
-- QR token verification and cross-shop rejection
-- Atomic distribution, stock decrement, and receipt issuance
-- Prevention of duplicate distribution
-- Role-based route guard enforcement
+```bash
+npm start
+```
 
----
+The backend is expected to run at:
 
-## 8. College Project Demonstration Guide
+```text
+http://localhost:5000
+```
 
-1. **Beneficiary Flow**:
-   - Log in using `karthik.pds@gmail.com` / `Citizen@123` (or click the quick-fill button on the login screen).
-   - View your Smart Ration Card with monthly entitlement (Rice, Wheat, Sugar, Kerosene, Dal).
-   - View your active 15-minute queue token and QR code. Click "Pay Subsidized Amount" to test the Mock Payment Gateway.
-   - Click "Book Slot" to test slot picking for next month or test with a new citizen registration using unlinked card `TN-04-99887766`.
-2. **Shop Owner Flow**:
-   - Log in using `owner.anna@smartpds.gov.in` / `Shop@123`.
-   - Go to "Verify & Distribute". Enter the token code (e.g. `PDS-TKN-202610-5936BFC8`) or scan with webcam.
-   - Verify household members, confirm cash payment, and click "Confirm & Distribute Ration".
-   - Notice the instant printable official receipt and automatic stock deduction.
-   - Try verifying the same token again: the system blocks duplicate distribution!
-   - Check "Stock Inventory" to view updated balances and test the "Replenish Stock" modal.
-3. **Administrator Flow**:
-   - Log in using `admin@smartpds.gov.in` / `Admin@123`.
-   - View statewide metrics, 7-day distribution trend line chart, monthly commodity volume bar chart, and card category pie chart.
-   - Check "Manage Users" to toggle citizen/shop status.
-   - Check "Fair Price Shops" to edit 15-minute slot capacity or add a new shop.
-   - Check "Analytics Reports" and click "Export CSV Report".
+The actual port depends on your configuration.
+
+### Step 5: Start the frontend
+
+Open a second terminal from the project root:
+
+```bash
+cd client
+npm install
+npm run dev
+```
+
+Open the local Vite URL shown in the terminal, typically:
+
+```text
+http://localhost:5173
+```
+
+## 9. Testing
+
+The backend includes an automated test suite using Node.js's native test runner.
+
+Run the tests from the server directory:
+
+```bash
+npm test
+```
+
+The test suite is intended to cover workflows such as:
+
+- Authentication and role authorization.
+- Ration card verification.
+- Slot availability and capacity limits.
+- Duplicate booking prevention.
+- Mock payment outcomes.
+- QR token verification.
+- Distribution and inventory updates.
+- Duplicate distribution prevention.
+
+**Test reporting:** Record the number of passed and failed tests based on the actual output from your current test run.
+
+## 10. Security and Privacy
+
+- Passwords are hashed before storage.
+- JWTs are used for authenticated requests.
+- Role-based authorization restricts protected operations.
+- QR tokens use cryptographic signatures for integrity verification.
+- Request rate limiting helps reduce abuse.
+- Environment variables keep deployment configuration separate from source code.
+- Test credentials and private configuration are not published in this README.
+
+The application is an academic project and demonstration platform. Production use would require additional security reviews, operational monitoring, accessibility checks, privacy safeguards, and integration with authorized government systems where applicable.
+
+## 11. Agile Engineering Documentation
+
+The `docs/` directory contains project planning and development artifacts, including:
+
+- Product Vision.
+- Product Backlog.
+- User Stories.
+- Sprint Plans.
+- Sprint Backlog.
+- Test Plan and Test Cases.
+- Definition of Done.
+- Sprint Review and Retrospective.
+
+These documents support iterative development, sprint tracking, testing, and review.
+
+## 12. Future Enhancements
+
+- Integration with authorized government PDS systems.
+- Production payment gateway integration.
+- Enhanced audit trails and operational monitoring.
+- Improved accessibility and multilingual support.
+- Advanced reporting and fraud-detection analytics.
+- Automated deployment and continuous integration.
+
+## 13. Disclaimer
+
+Smart PDS is an academic software project developed for educational and demonstration purposes. It is not an official government application and is not affiliated with any government department.
+
+All demonstration data should be synthetic. No real beneficiary credentials, Aadhaar details, payment secrets, or confidential government information should be published in the repository.
+
+## 14. License
+
+A license has not yet been specified. Add a suitable open-source license if you intend to permit public reuse or redistribution.
+
+
